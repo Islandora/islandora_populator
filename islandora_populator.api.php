@@ -20,7 +20,20 @@
  *     is "form", the name of a form to use.
  *   - output: An associative array mapping datastream IDs to:
  *     - callback: The function used in the submit handler to process into the
- *       desired XML format. Should accept the $form and $form_state as parameters.
+ *       desired XML format. Should accept the $form and $form_state as
+ *       parameters and return either a file object, content, or NULL if the
+ *       callback will add the datastream itself. If a file-object or content,
+ *       we will create a managed datastream; if needing to create content in
+ *       another control group, grab the object and construct/ingest the
+ *       datastream manually. If FALSE is returned from the callback, then we
+ *       assume that we are doing something magical.
+ *     - label callback: An optional function to get the label. Default is
+ *       "<datastream id> datastream". Takes the $form, $form_state and result
+ *       from 'callback' as input.
+ *     - undo callback: An optional function to call to "undo" the effects of
+ *       the callback. When a datastream was created, the default is to purge
+ *       it, and when it already existed on the object, the default is to do
+ *       nothing.
  *     - mimetype: The mimetype to apply to the output (defaults to
  *       "text/xml").
  */
