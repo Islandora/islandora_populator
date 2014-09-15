@@ -6,15 +6,18 @@
  */
 
 /**
- * 
+ * Form building function; dump out the "inline" form.
  */
-function islandora_populator_input_form($form, &$form_state, array $populator) {
+function islandora_populator_input_form($form, &$form_state, $selected, array $populator) {
   $storage =& islandora_ingest_form_get_step_storage($form_state);
   $storage['populator'] = $populator;
   $form += $populator['form'];
   return $form;
 }
 
+/**
+ * Form submission handler; run callbacks and create relevant datastreams.
+ */
 function islandora_populator_input_form_submit(&$form, &$form_state) {
   $storage =& islandora_ingest_form_get_step_storage($form_state);
   $storage['created'] = array();
@@ -26,7 +29,7 @@ function islandora_populator_input_form_submit(&$form, &$form_state) {
 
     $initially_existing = isset($object[$datastream_id]);
 
-    if (function_exists($info['callback'])) {
+    if (is_callable($info['callback'])) {
       $output = $info['callback']($form, $form_state);
     }
 
@@ -35,13 +38,14 @@ function islandora_populator_input_form_submit(&$form, &$form_state) {
     }
     elseif ($output !== NULL) {
       if ($initially_existing) {
+        // Already existing... could possibly throw a warning? Dunno...
         $datastream = $object[$datastream_id];
       }
       else {
         $datastream = $object->constructDatastream($datastream_id, 'M');
       }
 
-      $datastream->label = function_exists($info['label callback']) ?
+      $datastream->label = is_callable($info['label callback']) ?
         $info['label callback']($form, $form_state, $output) :
         "$datastream_id datastream";
       $datastream->mimetype = isset($info['mimetype']) ?
@@ -69,12 +73,15 @@ function islandora_populator_input_form_submit(&$form, &$form_state) {
   }
 }
 
+/**
+ * Form "undo" submission callback; nuke any datastreams we've created.
+ */
 function islandora_populator_input_form_undo_submit(&$form, &$form_state) {
   $storage =& islandora_ingest_form_get_step_storage($form_state);
   $object = islandora_ingest_form_get_object($form_state);
   foreach ($storage['populator']['output'] as $datastream_id => $info) {
     if (isset($info['undo callback']) && is_callable($info['undo callback'])) {
-      $info['undo callback']($form, $form_state);
+      $info['undo callback']($form, $form_state, $datastream_id, $info);
       $storage['created'] = array_diff($storage['created'], array($datastream_id));
     }
   }

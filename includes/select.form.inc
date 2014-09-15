@@ -12,9 +12,9 @@ function islandora_populator_select_form($form, &$form_state, array $populators)
   $form['selected'] = array(
     '#type' => 'radios',
     '#multiple' => FALSE,
-    '#options' => array($populators),
+    '#options' => $populators,
   ) + element_info('radios');
-  array_unshift($form['radios']['process'], 'islandora_populator_process_radios');
+  array_unshift($form['selected']['#process'], 'islandora_populator_process_radios');
 
   return $form;
 }
@@ -37,7 +37,7 @@ function islandora_populator_process_radios($element) {
 }
 
 /**
- * Form submission handler; stash the selected "populator"
+ * Form submission handler; stash the selected "populator".
  */
 function islandora_populator_select_form_submit(&$form, &$form_state) {
   $step_storage =& islandora_ingest_form_get_step_storage($form_state);

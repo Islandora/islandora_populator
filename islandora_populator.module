@@ -1,19 +1,34 @@
 <?php
 
+/**
+ * @file
+ * General hook implementations.
+ */
+
+/**
+ * Helper function; get available populators.
+ */
 function islandora_populator_get_populators() {
   $populators =& drupal_static(__FUNCTION__, array());
 
   if (empty($populators)) {
-    $populators = module_invoke_all('islandora_populator');
+    $default = array(
+      NULL => array(
+        'title' => t('Manual Record Entry'),
+        'description' => t('You can enter the record later.'),
+      ),
+    );
+    $populators = $default + module_invoke_all('islandora_populator');
     drupal_alter('islandora_populator', $populators);
   }
 
   return $populators;
 }
 
-function islandora_populator_islandora_ingest_steps(array $form_state) {
-  $mod_path = drupal_get_path('module', 'islandora_populator');
-
+/**
+ * Implements hook_islandora_ingest_steps().
+ */
+function islandora_populator_islandora_ingest_steps(array &$form_state) {
   $steps = array();
 
   $populators = islandora_populator_get_populators();
@@ -23,20 +38,29 @@ function islandora_populator_islandora_ingest_steps(array $form_state) {
       'weight' => 1,
       'form_id' => 'islandora_populator_select_form',
       'args' => array($populators),
-      'file' => "$mod_path/select.form.inc",
+      'module' => 'islandora_populator',
+      'file' => 'includes/select.form.inc',
     );
 
     $step_storage = islandora_ingest_form_get_step_storage($form_state, 'islandora_populator_select');
-    if (isset($step_storage['selected']) && isset($populators[$step_storage['selected']])) {
+    if (isset($step_storage['selected']) && $step_storage['selected'] != NULL && isset($populators[$step_storage['selected']])) {
       $populator = $populators[$step_storage['selected']];
+
+      $populator += array('files' => array());
+      foreach ($populator['files'] as $file_info) {
+        list($ext, $module, $path) = $file_info;
+        form_load_include($form_state, $ext, $module, $path);
+      }
+
       $steps['islandora_populator_input'] = array(
         'type' => 'form',
         'weight' => $steps['islandora_populator_select']['weight'] + 1,
-        'form_id' => $populator['type'] == 'form' ?
+        'form_id' => ($populator['type'] == 'form' ?
           $populator['form'] :
-          'islandora_populator_input_form',
+          'islandora_populator_input_form'),
         'args' => array($step_storage['selected'], $populator),
-        'file' => "$mod_path/input.form.inc",
+        'module' => 'islandora_populator',
+        'file' => "includes/input.form.inc",
       );
     }
   }
