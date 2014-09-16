@@ -12,6 +12,7 @@ function islandora_xslt_populator_admin_form($form, &$form_state) {
   module_load_include('inc', 'islandora_xslt_populator', 'includes/utilities');
   $populators = islandora_xslt_populator_get_populators();
   foreach ($populators as &$populator) {
+    $populator['description'] = check_plain($populator['description']);
     $populator['xslt'] = theme('file_link', array(
       'file' => file_load($populator['xslt']),
     ));

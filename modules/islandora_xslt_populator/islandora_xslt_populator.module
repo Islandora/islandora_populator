@@ -44,7 +44,7 @@ function islandora_xslt_populator_islandora_populator() {
           '#title' => t('@title, input file', array(
             '@title' => $info['title'],
           )),
-          '#description' => $info['description'],
+          '#description' => check_plain($info['description']),
           '#required' => TRUE,
           '#upload_validators' => array(
             'file_validate_extensions' => array('xml xslt xsl'),
