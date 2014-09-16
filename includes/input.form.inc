@@ -45,7 +45,7 @@ function islandora_populator_input_form_submit(&$form, &$form_state) {
         $datastream = $object->constructDatastream($datastream_id, 'M');
       }
 
-      $datastream->label = is_callable($info['label callback']) ?
+      $datastream->label = (isset($info['label callback']) && is_callable($info['label callback'])) ?
         $info['label callback']($form, $form_state, $output) :
         "$datastream_id datastream";
       $datastream->mimetype = isset($info['mimetype']) ?
