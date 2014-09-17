@@ -12,9 +12,11 @@
  * $form_state.
  */
 function islandora_xslt_populator_validate_file($element, &$form_state, $form) {
-  $file = file_load($element['#value']);
+  $file = file_load($element['#value']['fid']);
   $info = json_decode($form_state['values']['info'], TRUE);
-  $output = islandora_xslt_populator_run_xslt($file, file_load($info['xslt']));
+  $output = $file ?
+    islandora_xslt_populator_run_xslt($file, file_load($info['xslt'])) :
+    FALSE;
   if ($output === FALSE) {
     form_error($element, t('The uploaded file could not be transformed.'));
   }
