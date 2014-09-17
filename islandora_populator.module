@@ -32,7 +32,7 @@ function islandora_populator_islandora_ingest_steps(array &$form_state) {
   $steps = array();
 
   $populators = islandora_populator_get_populators();
-  if (!empty($populators)) {
+  if (count($populators) > 1) {
     $steps['islandora_populator_select'] = array(
       'type' => 'form',
       'weight' => 1,
