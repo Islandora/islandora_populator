@@ -16,6 +16,7 @@ function islandora_populator_get_populators() {
       NULL => array(
         'title' => t('Manual Record Entry'),
         'description' => t('You can enter the record later.'),
+        'type' => NULL,
       ),
     );
     $populators = $default + module_invoke_all('islandora_populator');
