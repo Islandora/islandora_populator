@@ -26,7 +26,7 @@ function islandora_xslt_populator_menu() {
  * Implements hook_islandora_populator().
  */
 function islandora_xslt_populator_islandora_populator() {
-  module_load_include('inc', 'islandora_xslt_populator', 'includes/utilities');
+  module_load_include('inc', 'islandora_xslt_populator', 'includes/db');
   $populators = islandora_xslt_populator_get_populators();
 
   $items = array();
@@ -69,6 +69,23 @@ function islandora_xslt_populator_islandora_populator() {
       ),
     );
   }
+
+  return $items;
+}
+
+/**
+ * Implements hook_features_api().
+ */
+function islandora_xslt_populator_features_api() {
+  $items = array();
+  $mod_path = drupal_get_path('module', 'islandora_xslt_populator');
+
+  $items['islandora_xslt_populator_definitions'] = array(
+    'name' => t('Islandora XSLT Populator Definitions'),
+    'file' => "$mod_path/includes/features.inc",
+    'default_hook' => 'islandora_xslt_populator_definition_defaults',
+    'feature_source' => TRUE,
+  );
 
   return $items;
 }

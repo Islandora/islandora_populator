@@ -9,7 +9,7 @@
  * Form building functions; allow addition and removal of XSLT populators.
  */
 function islandora_xslt_populator_admin_form($form, &$form_state) {
-  module_load_include('inc', 'islandora_xslt_populator', 'includes/utilities');
+  form_load_include($form_state, 'inc', 'islandora_xslt_populator', 'includes/db');
   $populators = islandora_xslt_populator_get_populators();
   foreach ($populators as &$populator) {
     $populator['description'] = check_plain($populator['description']);
@@ -35,6 +35,7 @@ function islandora_xslt_populator_admin_form($form, &$form_state) {
           'description' => t('Description'),
           'xslt' => t('XSLT File'),
           'datastream_id' => t('Generated Datastream ID'),
+          'machine_name' => t('Machine Name'),
         ),
         '#options' => $populators,
         '#empty' => t('None configured.'),
@@ -82,6 +83,12 @@ function islandora_xslt_populator_admin_form($form, &$form_state) {
         '#title' => t('Datastream ID'),
         '#description' => t('The datastream identifier into which the result of the XSLT will be stored.'),
         '#required' => TRUE,
+      ),
+      'machine_name' => array(
+        '#type' => 'textfield',
+        '#title' => t('Machine Name'),
+        '#description' => t('A machine name for use in features. If not provided, the relevent configuration will not be available for export in features.'),
+        '#required' => FALSE,
       ),
       'add' => array(
         '#type' => 'submit',
@@ -136,64 +143,7 @@ function islandora_xslt_populator_admin_form_add_submit(&$form, &$form_state) {
     $form_state['values']['new']['title'],
     $form_state['values']['new']['description'],
     $form_state['values']['new']['xslt'],
-    $form_state['values']['new']['datastream_id']
+    $form_state['values']['new']['datastream_id'],
+    $form_state['values']['new']['machine_name']
   );
-}
-
-/**
- * Remove populator(s).
- *
- * Remove from the DB and remove the file usage entries.
- *
- * @param string|array $ids
- *   Either a single ID or an array of IDs to remove.
- */
-function islandora_xslt_populator_remove_populator($ids) {
-  module_load_include('inc', 'islandora_xslt_populator', 'includes/utilities');
-  $populators = islandora_xslt_populator_get_populators($ids);
-  foreach ($populators as $id => $info) {
-    $file = file_load($info['xslt']);
-    db_delete('islandora_xslt_populator')
-      ->condition('id', $id)
-      ->execute();
-    file_usage_delete($file, 'islandora_xslt_populator', 'populator', $id);
-    $file->status &= ~FILE_STATUS_PERMANENT;
-    file_save($file);
-    file_delete($file);
-  }
-}
-
-/**
- * Add populator.
- *
- * Adds to the DB and registered the file usage.
- *
- * @param string $title
- *   The title of the populator.
- * @param string $description
- *   The description for the populator.
- * @param int|string $xslt
- *   The file ID of the XSLT.
- * @param string $datastream_id
- *   The datastream ID into which the output should be stored.
- *
- * @return int
- *   The ID of the populator as it was entered into the database.
- */
-function islandora_xslt_populator_add_populator($title, $description, $xslt, $datastream_id) {
-  $id = db_insert('islandora_xslt_populator')
-    ->fields(array(
-      'title' => $title,
-      'description' => $description,
-      'xslt' => $xslt,
-      'datastream_id' => $datastream_id,
-    ))
-    ->execute();
-
-  $file = file_load($xslt);
-  file_usage_add($file, 'islandora_xslt_populator', 'populator', $id);
-  $file->status |= FILE_STATUS_PERMANENT;
-  file_save($file);
-
-  return $id;
 }

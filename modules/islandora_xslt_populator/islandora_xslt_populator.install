@@ -42,8 +42,17 @@ function islandora_xslt_populator_schema() {
         'length' => 64,
         'not null' => TRUE,
       ),
+      'machine_name' => array(
+        'type' => 'varchar',
+        'description' => 'Machine name used for features.',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
     ),
     'primary key' => array('id'),
+    'unique keys' => array(
+      'machine_name' => array('machine_name'),
+    ),
     'foreign keys' => array(
       'file_id' => array(
         'table' => 'file_managed',
