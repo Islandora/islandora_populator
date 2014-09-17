@@ -1,18 +1,22 @@
-# Islandora Populator
+# Islandora XSLT Populator
 
 ## Introduction
 
-A framework to facilitate the population of XML forms during the usual ingest workflow.
+A plugin for the [Islandora Populator](http://github.com/discoverygarden/islandora_populator) framework to allow the configuration of simple transforms via an adminstrator interface.
 
 ## Requirements
 
 This module requires the following modules/libraries:
 
-* [Islandora](https://github.com/islandora/islandora)
+* [Islandora Populator](http://github.com/discoverygarden/islandora_populator)
 
 ## Installation
 
 Install as usual, see [this](https://drupal.org/documentation/install/modules-themes/modules-7) for further information.
+
+## Configuration
+
+When this module is enabled, administrators should be able to configure "populators" at `admin/islandora/tools/xslt_populator`.
 
 ## Troubleshooting/Issues
 
