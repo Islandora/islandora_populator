@@ -31,7 +31,15 @@ function islandora_populator_get_populators() {
 function islandora_populator_islandora_ingest_steps(array &$form_state) {
   $steps = array();
 
-  $populators = islandora_populator_get_populators();
+  module_load_include('inc', 'islandora', 'includes/ingest.form');
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  $shared_storage = islandora_ingest_form_get_shared_storage($form_state);
+  $datastreams = islandora_get_datastreams_requirements_from_models($shared_storage['models']);
+  $applicable_filter = function ($populator) use ($datastreams) {
+    return $populator['type'] != 'inline' || array_intersect_key($datastreams, $populator['output']);
+  };
+  $all_populators = islandora_populator_get_populators();
+  $populators = array_filter($all_populators, $applicable_filter);
   if (count($populators) > 1) {
     $steps['islandora_populator_select'] = array(
       'type' => 'form',
