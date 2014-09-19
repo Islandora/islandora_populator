@@ -10,6 +10,7 @@
  */
 function islandora_xslt_populator_admin_form($form, &$form_state) {
   form_load_include($form_state, 'inc', 'islandora_xslt_populator', 'includes/db');
+  form_load_include($form_state, 'inc', 'islandora_xslt_populator', 'includes/admin.form');
   $populators = islandora_xslt_populator_get_populators();
   foreach ($populators as &$populator) {
     $populator['description'] = check_plain($populator['description']);
@@ -76,6 +77,7 @@ function islandora_xslt_populator_admin_form($form, &$form_state) {
         '#upload_location' => $destination,
         '#upload_validators' => array(
           'file_validate_extensions' => array('xsl xslt xml'),
+          'islandora_xslt_populator_file_appears_to_be_xslt' => array(),
         ),
       ),
       'datastream_id' => array(
@@ -146,4 +148,33 @@ function islandora_xslt_populator_admin_form_add_submit(&$form, &$form_state) {
     $form_state['values']['new']['datastream_id'],
     $form_state['values']['new']['machine_name']
   );
+}
+
+/**
+ * Test if the contents of a file is an XSLT... Or at least appears to be one?
+ *
+ * @param object $file
+ *   A Drupal file-object.
+ *
+ * @return array
+ *   An array of error messages; if empty, the file should be good.
+ */
+function islandora_xslt_populator_file_appears_to_be_xslt($file) {
+  $doc = new DOMDocument();
+  if (!@$doc->load(drupal_realpath($file->uri))) {
+    return array(
+      t('The file could not be parsed as XML.'),
+    );
+  }
+
+  $element = $doc->documentElement;
+  if (!($element->namespaceURI == 'http://www.w3.org/1999/XSL/Transform' &&
+    $element->localName == 'stylesheet' &&
+    $element->getAttribute('version') == '1.0')) {
+    return array(
+      t('The file does not appear to be a valid version 1.0 XSLT.'),
+    );
+  }
+
+  return array();
 }
