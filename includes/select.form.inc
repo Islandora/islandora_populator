@@ -14,7 +14,7 @@ function islandora_populator_select_form($form, &$form_state, array $populators)
     '#multiple' => FALSE,
     '#options' => $populators,
   ) + element_info('radios');
-  array_unshift($form['selected']['#process'], 'islandora_populator_process_radios');
+  array_unshift($form['selected']['#process'], 'islandora_populator_expand_radios');
 
   return $form;
 }
@@ -24,7 +24,7 @@ function islandora_populator_select_form($form, &$form_state, array $populators)
  *
  * Wanting to add descriptions... Great fun!
  */
-function islandora_populator_process_radios($element) {
+function islandora_populator_expand_radios($element) {
   foreach ($element['#options'] as $key => &$values) {
     $element[$key]['#description'] = isset($values['description']) ?
       $values['description'] :
