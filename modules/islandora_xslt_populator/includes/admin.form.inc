@@ -151,7 +151,7 @@ function islandora_xslt_populator_admin_form_add_submit(&$form, &$form_state) {
 }
 
 /**
- * Test if the contents of a file is an XSLT... Or at least appears to be one?
+ * Test if the contents of a file appears to be an XSLT.
  *
  * @param object $file
  *   A Drupal file-object.
