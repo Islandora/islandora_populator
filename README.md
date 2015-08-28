@@ -1,4 +1,4 @@
-# Islandora Populator
+# Islandora Populator [![Build Status](https://travis-ci.org/Islandora/islandora_populator.png?branch=7.x)](https://travis-ci.org/Islandora/islandora_populator)
 
 ## Introduction
 
@@ -25,7 +25,7 @@ Having problems or solved a problem? Check out the Islandora google groups for a
 
 Current maintainers:
 
-* [discoverygarden Inc.](https://github.com/discoverygarden)
+* [Adam Vessey](https://github.com/adam-vessey)
 
 ## Development
 

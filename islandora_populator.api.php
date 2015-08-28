@@ -63,4 +63,4 @@ function hook_islandora_populator() {
       ),
     ),
   );
-}'
+}
