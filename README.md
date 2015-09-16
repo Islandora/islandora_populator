@@ -14,6 +14,12 @@ This module requires the following modules/libraries:
 
 Install as usual, see [this](https://drupal.org/documentation/install/modules-themes/modules-7) for further information.
 
+## Configuration
+
+Restrict to certain content models in in Administration » Islandora » Populator Configuration (admin/islandora/populator). This will remove the ingest step from content models not selected.
+
+![image](https://cloud.githubusercontent.com/assets/2371345/9911924/0419b852-5c7b-11e5-903e-7a0f76c88b9c.png)
+
 ## Documentation
 
 Further documentation for this module is available at [our wiki](https://wiki.duraspace.org/display/ISLANDORA/Islandora+Populator).
