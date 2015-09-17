@@ -29,9 +29,9 @@ function islandora_populator_get_populators() {
 
   if (empty($populators)) {
     $default = array(
-      NULL => array(
+      'manual' => array(
         'title' => t('Manual Record Entry'),
-        'description' => t('You can enter the record later.'),
+        'description' => t('You can enter the record later (default).'),
         'type' => NULL,
       ),
     );
