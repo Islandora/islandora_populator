@@ -13,7 +13,7 @@ function islandora_populator_select_form($form, &$form_state, array $populators)
     '#type' => 'radios',
     '#multiple' => FALSE,
     '#options' => $populators,
-    '#default_value' => NULL,
+    '#default_value' => 'default',
   ) + element_info('radios');
   array_unshift($form['selected']['#process'], 'islandora_populator_expand_radios');
 
