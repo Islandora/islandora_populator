@@ -30,8 +30,8 @@ function islandora_populator_get_populators() {
   if (empty($populators)) {
     $default = array(
       'default' => array(
-        'title' => t('Manual Record Entry'),
-        'description' => t('You can enter the record later (default).'),
+        'title' => t('None'),
+        'description' => t('Metadata will have to be added manually (default).'),
         'type' => NULL,
       ),
     );
