@@ -31,7 +31,7 @@ function islandora_populator_get_populators() {
     $default = array(
       'default' => array(
         'title' => t('Manual Record Entry'),
-        'description' => t('You can enter the record later.'),
+        'description' => t('You can enter the record later (default).'),
         'type' => NULL,
       ),
     );
