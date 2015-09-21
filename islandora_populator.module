@@ -100,12 +100,12 @@ function islandora_populator_islandora_ingest_steps(array &$form_state) {
 }
 
 /**
- * Impelements hook_islandora_ingest_steps_alter().
+ * Implements hook_islandora_ingest_steps_alter().
  */
 function islandora_populator_islandora_ingest_steps_alter(array &$steps, array &$form_state) {
   if (isset($steps['xml_form_builder_metadata_step'])) {
     if (array_key_exists('islandora_populator_select', $steps)) {
-      $steps['islandora_populator_select']['args']['0']['default']['description'] = t("An opportunity will be provided to enter metadata.");
+      $steps['islandora_populator_select']['args'][0]['default']['description'] = t("An opportunity will be provided to enter metadata.");
     }
   }
 }
