@@ -10,6 +10,7 @@
  */
 function islandora_populator_select_form($form, &$form_state, array $populators) {
   $form['selected'] = array(
+    '#title' => t('Prepopulate metadata from source:'),
     '#type' => 'radios',
     '#multiple' => FALSE,
     '#options' => $populators,
