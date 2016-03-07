@@ -65,11 +65,14 @@ function islandora_xslt_populator_remove_populator($ids) {
  *   The datastream ID into which the output should be stored.
  * @param string $machine_name
  *   A name for the populator, to identify in features.
+ * @param NULL|string $original_dsid
+ *   NULL if not storing the original file, string of the DSID to be saved into
+ *   otherwise.
  *
  * @return int
  *   The ID of the populator as it was entered into the database.
  */
-function islandora_xslt_populator_add_populator($title, $description, $xslt, $datastream_id, $machine_name = NULL) {
+function islandora_xslt_populator_add_populator($title, $description, $xslt, $datastream_id, $machine_name = NULL, $original_dsid = NULL) {
   $id = db_insert('islandora_xslt_populator')
     ->fields(array(
       'title' => $title,
@@ -77,6 +80,7 @@ function islandora_xslt_populator_add_populator($title, $description, $xslt, $da
       'xslt' => $xslt,
       'datastream_id' => $datastream_id,
       'machine_name' => $machine_name,
+      'original_dsid' => $original_dsid ? $original_dsid : '',
     ))
     ->execute();
 

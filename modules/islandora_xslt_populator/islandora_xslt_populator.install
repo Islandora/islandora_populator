@@ -48,6 +48,12 @@ function islandora_xslt_populator_schema() {
         'length' => 255,
         'not null' => FALSE,
       ),
+      'original_dsid' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => FALSE,
+        'default' => NULL,
+      ),
     ),
     'primary key' => array('id'),
     'unique keys' => array(
@@ -62,4 +68,17 @@ function islandora_xslt_populator_schema() {
   );
 
   return $schema;
+}
+
+
+/**
+ * Adds the original_dsid column for optional storing the uploaded file.
+ */
+function islandora_xslt_populator_update_7001(&$sandbox) {
+  db_add_field('islandora_xslt_populator', 'original_dsid', array(
+    'type' => 'varchar',
+    'length' => 64,
+    'not null' => FALSE,
+    'default' => NULL,
+  ));
 }
