@@ -84,7 +84,8 @@ function islandora_xslt_populator_definitions_features_rebuild($module_name) {
       $info['description'],
       $file->fid,
       $info['datastream_id'],
-      $machine_name
+      $machine_name,
+      isset($info['original_dsid']) ? $info['original_dsid'] : NULL
     );
   }
 }
