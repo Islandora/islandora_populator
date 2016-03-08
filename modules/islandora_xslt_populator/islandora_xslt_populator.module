@@ -62,6 +62,7 @@ function islandora_xslt_populator_islandora_populator() {
       'output' => array(
         $info['datastream_id'] => array(
           'callback' => 'islandora_xslt_populator_populate',
+          'undo callback' => 'islandora_xslt_populator_depopulate',
         ),
       ),
       'files' => array(

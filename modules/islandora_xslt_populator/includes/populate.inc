@@ -33,6 +33,8 @@ function islandora_xslt_populator_validate_file($element, &$form_state, $form) {
  */
 function islandora_xslt_populator_populate(&$form, &$form_state) {
   $storage =& islandora_ingest_form_get_step_storage($form_state);
+  $object = islandora_ingest_form_get_object($form_state);
+
   // Need to grab the populator definitions to see if we are also storing
   // the original at this point. The XSLT populator module appends an arbitrary
   // string to key the array so replacing that out now to get our database ID.
@@ -43,7 +45,6 @@ function islandora_xslt_populator_populate(&$form, &$form_state) {
   $file = file_load($form_state['values']['file']['fid']);
   if (!is_null($original_dsid)) {
     // Store the original now.
-    $object = islandora_ingest_form_get_object($form_state);
     if (!isset($object[$original_dsid])) {
       $ds = $object->constructDatastream($original_dsid, 'M');
       $ds->label = "$original_dsid Datastream";
@@ -56,8 +57,21 @@ function islandora_xslt_populator_populate(&$form, &$form_state) {
     if ($ds->mimetype != $file->filemime) {
       $ds->mimetype = $file->filemime;
     }
+    $storage['islandora_xslt_populator']['original_dsid'] = $original_dsid;
   }
   return $storage['islandora_xslt_populator']['file'];
+}
+
+/**
+ * Populator callback; depopulate any stored original datastream values.
+ */
+function islandora_xslt_populator_depopulate(&$form, &$form_state) {
+  $storage =& islandora_ingest_form_get_step_storage($form_state);
+  $object = islandora_ingest_form_get_object($form_state);
+  if (isset($storage['islandora_xslt_populator']['original_dsid'])) {
+    $object->purgeDatastream($storage['islandora_xslt_populator']['original_dsid']);
+    unset($storage['islandora_xslt_populator']['original_dsid']);
+  }
 }
 
 /**
