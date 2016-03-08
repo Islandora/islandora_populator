@@ -80,7 +80,7 @@ function islandora_xslt_populator_add_populator($title, $description, $xslt, $da
       'xslt' => $xslt,
       'datastream_id' => $datastream_id,
       'machine_name' => $machine_name,
-      'original_dsid' => $original_dsid ? $original_dsid : '',
+      'original_dsid' => $original_dsid,
     ))
     ->execute();
 

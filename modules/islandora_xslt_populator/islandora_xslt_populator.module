@@ -32,7 +32,7 @@ function islandora_xslt_populator_islandora_populator() {
   $items = array();
 
   foreach ($populators as $id => $info) {
-    $items["islandora_xslt_populator--$id"] = array(
+    $values = array(
       'title' => t('XSLT Populator: @title', array(
         '@title' => $info['title'],
       )),
@@ -62,13 +62,18 @@ function islandora_xslt_populator_islandora_populator() {
       'output' => array(
         $info['datastream_id'] => array(
           'callback' => 'islandora_xslt_populator_populate',
-          'undo callback' => 'islandora_xslt_populator_depopulate',
         ),
       ),
       'files' => array(
         array('inc', 'islandora_xslt_populator', 'includes/populate'),
       ),
     );
+    if (!is_null($info['original_dsid'])) {
+      $values['output'][$info['original_dsid']] = array(
+        'callback' => 'islandora_xslt_populator_populate_original_dsid',
+      );
+    }
+    $items["islandora_xslt_populator--$id"] = $values;
   }
 
   return $items;
