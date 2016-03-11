@@ -37,6 +37,13 @@ function islandora_xslt_populator_populate(&$form, &$form_state) {
 }
 
 /**
+ * Populator callback; populate any stored original datastream values.
+ */
+function islandora_xslt_populator_populate_original_dsid(&$form, &$form_state) {
+  return file_load($form_state['values']['file']['fid']);
+}
+
+/**
  * Helper function to run an XSLT.
  *
  * @param object $input_file

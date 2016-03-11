@@ -13,6 +13,9 @@ function islandora_xslt_populator_admin_form($form, &$form_state) {
   form_load_include($form_state, 'inc', 'islandora_xslt_populator', 'includes/admin.form');
   $populators = islandora_xslt_populator_get_populators();
   foreach ($populators as &$populator) {
+    if (is_null($populator['original_dsid'])) {
+      $populator['original_dsid'] = t('Not storing original.');
+    }
     $populator['description'] = check_plain($populator['description']);
     $populator['xslt'] = theme('file_link', array(
       'file' => file_load($populator['xslt']),
@@ -36,6 +39,7 @@ function islandora_xslt_populator_admin_form($form, &$form_state) {
           'description' => t('Description'),
           'xslt' => t('XSLT File'),
           'datastream_id' => t('Generated Datastream ID'),
+          'original_dsid' => t('Stored Datastream ID'),
           'machine_name' => t('Machine Name'),
         ),
         '#options' => $populators,
@@ -92,6 +96,23 @@ function islandora_xslt_populator_admin_form($form, &$form_state) {
         '#description' => t('A machine name for use in features. If not provided, the relevent configuration will not be available for export in features.'),
         '#required' => FALSE,
       ),
+      'store_original' => array(
+        '#type' => 'checkbox',
+        '#title' => t('Store copy of original file'),
+        '#description' => t('Creates a datastream to store a copy of the original XML file uploaded.'),
+      ),
+      'original_dsid' => array(
+        '#type' => 'textfield',
+        '#title' => t('Original Datastream ID'),
+        '#description' => t('The datastream identifier into which the original file will be stored.'),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="new[store_original]"]' => array(
+              'checked' => TRUE,
+            ),
+          ),
+        ),
+      ),
       'add' => array(
         '#type' => 'submit',
         '#value' => t('Add'),
@@ -135,6 +156,9 @@ function islandora_xslt_populator_admin_form_add_validate(&$form, &$form_state) 
   if (!islandora_is_valid_dsid($form_state['values']['new']['datastream_id'])) {
     form_error($form['new']['datastream_id'], t('The given datastream ID does not appear to be valid.'));
   }
+  if ($form_state['values']['new']['store_original'] && (empty($form_state['values']['new']['original_dsid']) || !islandora_is_valid_dsid($form_state['values']['new']['original_dsid']))) {
+    form_error($form['new']['original_dsid'], t('The given datastream ID does not appear to be valid.'));
+  }
 }
 
 /**
@@ -146,7 +170,8 @@ function islandora_xslt_populator_admin_form_add_submit(&$form, &$form_state) {
     $form_state['values']['new']['description'],
     $form_state['values']['new']['xslt'],
     $form_state['values']['new']['datastream_id'],
-    $form_state['values']['new']['machine_name']
+    $form_state['values']['new']['machine_name'],
+    $form_state['values']['new']['store_original'] ? $form_state['values']['new']['original_dsid'] : NULL
   );
 }
 
