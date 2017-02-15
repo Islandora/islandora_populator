@@ -2,13 +2,13 @@
 
 ## Introduction
 
-A plugin for the [Islandora Populator](http://github.com/discoverygarden/islandora_populator) framework to allow the configuration of simple transforms via an adminstrator interface.
+A plugin for the [Islandora Populator](http://github.com/islandora/islandora_populator) framework to allow the configuration of simple transforms via an adminstrator interface.
 
 ## Requirements
 
 This module requires the following modules/libraries:
 
-* [Islandora Populator](http://github.com/discoverygarden/islandora_populator)
+* [Islandora Populator](http://github.com/islandora/islandora_populator)
 
 ## Installation
 
@@ -29,7 +29,7 @@ Having problems or solved a problem? Check out the Islandora google groups for a
 
 Current maintainers:
 
-* [discoverygarden Inc.](https://github.com/discoverygarden)
+* [Jordan Dukart](https://github.com/jordandukart)
 
 ## Development
 
