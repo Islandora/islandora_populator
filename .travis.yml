@@ -20,8 +20,9 @@ before_install:
   - cd $HOME/drupal-*
   - ln -s $TRAVIS_BUILD_DIR sites/all/modules/islandora_populator
   - drush -u 1 en --yes islandora_populator
+  # Mysql might time out for long tests, increase the wait timeout.
+  - mysql -e 'SET @@GLOBAL.wait_timeout=1200'
 script:
   - $ISLANDORA_DIR/tests/scripts/line_endings.sh sites/all/modules/islandora_populator
   - drush coder-review --reviews=production,security,style,i18n,potx,sniffer sites/all/modules/islandora_populator
   - phpcpd --names *.module,*.inc,*.test,*.php sites/all/modules/islandora_populator
-  - drush test-run --uri=http://localhost:8081 "Islandora Populator"
